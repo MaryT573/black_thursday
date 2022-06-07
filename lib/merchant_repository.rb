@@ -26,6 +26,7 @@ class MerchantRepository
 
   def create(attributes)
     attributes[:id] = (@all.max {|merchant| merchant.id}).id + 1
+    attributes[:created_at] = Time.now
       new_merchant = Merchant.new(attributes)
         @all << new_merchant
           new_merchant

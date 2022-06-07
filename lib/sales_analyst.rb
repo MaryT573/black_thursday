@@ -27,7 +27,7 @@ class SalesAnalyst < SalesEngine
   def count_merchants_items(id)
     @items.find_all_by_merchant_id(id).count
   end
-  
+
   def price_array(id)
     @items.find_all_by_merchant_id(id).map do |item|
      item.unit_price_to_dollars
@@ -136,6 +136,7 @@ class SalesAnalyst < SalesEngine
   def top_revenue_earners(number = 20)
     merchants_revenue = @merchants.all.find_all {|merchant| merchant.id}
     merchants_revenue.max(number) {|id| revenue_by_merchant(id)}
+  end
 
   def merchants_with_only_one_item
     @merchants.all.find_all do |merchant|
@@ -161,7 +162,7 @@ class SalesAnalyst < SalesEngine
     merchant_invoices = merchant_invoices.uniq
     merchant_invoices.map {|merchant_id| @merchants.find_by_id(merchant_id)}
   end
-  
+
   def most_sold_item_for_merchant(m_id)
     most_items = []
     items_from_M = @items.find_all_by_merchant_id(m_id)
