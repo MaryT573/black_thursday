@@ -135,4 +135,13 @@ class SalesAnalyst < SalesEngine
     invoice_paid_in_full?(id) ? total = @invoice_items.find_all_by_invoice_id(id).sum {|invoice_item| invoice_item.unit_price * invoice_item.quantity} : total = 0
     total
   end
+
+  def most_sold_item_for_merchant(m_id)
+    most_items = []
+    items_from_M = @items.find_all_by_merchant_id(m_id)
+    items_i = items_from_M.flat_map do |item|
+      @invoice_items.find_all_by_item_id(item.id)
+    end
+    most_items << items_i.max {|item| item.quantity}
+  end
 end

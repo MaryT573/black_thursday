@@ -107,4 +107,9 @@ RSpec.describe SalesAnalyst do
     expect(sales_analyst.invoice_total(1)).to eq(21067.77)
     expect(sales_analyst.invoice_total(1).class).to eq BigDecimal
   end
+
+  it 'can find the most_sold_item_for_merchant' do
+    expect(sales_analyst.most_sold_item_for_merchant(12335009)).to be_a(Array)
+    expect(sales_analyst.most_sold_item_for_merchant(12336163).length).to eq(1)
+  end
 end
