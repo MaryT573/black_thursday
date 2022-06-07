@@ -99,7 +99,7 @@ class SalesAnalyst < SalesEngine
 
   def invoices_per_weekday
     invoice_count = {'Monday' => 0,'Tuesday' => 0,'Wednesday' => 0,'Thursday' => 0,'Friday' => 0,'Saturday' => 0,'Sunday' => 0,}
-   @invoices.all.each do |invoice|
+    @invoices.all.each do |invoice|
       invoice_count[invoice.created_at.strftime("%A")] += 1
     end
     invoice_count

@@ -49,7 +49,4 @@ class TransactionRepository
       end
     end
   end
-
 end
-
-# update(id, attribute) - update the Transaction instance with the corresponding id with the provided attributes. Only the transaction’s credit_card_number, credit_card_expiration_date, and result can be updated. This method will also change the transaction’s updated_at attribute to the current time.

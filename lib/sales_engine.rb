@@ -29,7 +29,6 @@ class SalesEngine
     @invoice_items = InvoiceItemRepository.new(invoice_item_path)
     @transactions = TransactionRepository.new(transaction_path)
     @customers = CustomerRepository.new(customer_path)
-
   end
 
   def self.from_csv(data)

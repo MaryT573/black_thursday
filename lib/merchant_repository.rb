@@ -11,7 +11,7 @@ class MerchantRepository
               :name
 
   def inspect
-  "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@merchants.size} rows>"
   end
 
   def initialize(file_path)

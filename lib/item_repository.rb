@@ -10,7 +10,7 @@ class ItemRepository
   attr_reader :all
 
   def inspect
-  "#<#{self.class} #{@merchants.size} rows>"
+    "#<#{self.class} #{@merchants.size} rows>"
   end
 
   def initialize(file_path)
@@ -21,8 +21,8 @@ class ItemRepository
   end
 
   def create(attributes)
-  attributes[:id]= find_max_id + 1
-  @all << Item.new(attributes)
+    attributes[:id]= find_max_id + 1
+    @all << Item.new(attributes)
   end
 
 
