@@ -39,5 +39,4 @@ class InvoiceRepository
     end
     find_by_id(id).updated_at = Time.now if find_by_id(id).class == Invoice
   end
-
 end

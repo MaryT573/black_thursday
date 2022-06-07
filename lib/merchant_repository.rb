@@ -23,7 +23,6 @@ class MerchantRepository
     @all
   end
 
-
   def create(attributes)
     attributes[:id] = (@all.max {|merchant| merchant.id}).id + 1
     attributes[:created_at] = Time.now
@@ -40,6 +39,4 @@ class MerchantRepository
       merchant.name = attributes[:name]
     end
   end
-
-
 end

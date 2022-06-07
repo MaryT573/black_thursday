@@ -28,7 +28,6 @@ class CustomerRepository
     @all.find_all {|last_names| last_names.last_name.downcase.include?(name.downcase)}
   end
 
-
   def create(attributes)
     attributes[:id]= find_max_id + 1
     @all << Customer.new(attributes)
