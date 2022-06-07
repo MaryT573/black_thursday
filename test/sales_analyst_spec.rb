@@ -111,10 +111,16 @@ RSpec.describe SalesAnalyst do
   it 'Finds the total revenue for a single merchant' do
     expect(sales_analyst.revenue_by_merchant(12334194)).to eq(97979.37)
     expect(sales_analyst.revenue_by_merchant(12334194)).to be_a(BigDecimal)
+  end
 
   it "finds #merchants_with_pending_invoices returns merchants with pending invoices" do
     expected = sales_analyst.merchants_with_pending_invoices
     expect(expected.length).to eq 448
     expect(expected.first.class).to eq Merchant
+  end
+
+  it 'returns a merchants best item by revenue' do
+    expect(sales_analyst.best_item_for_merchant(12334194).class).to eq(Item)
+    expect(sales_analyst.best_item_for_merchant(12334112).id).to eq(263539438)
   end
 end
