@@ -59,4 +59,17 @@ module Findable
     @all.find_all {|invoice| invoice.invoice_id == id}
   end
 
+  #Transaction methods
+  def find_all_by_invoice_id(id)
+    @all.find_all {|invoice| invoice.invoice_id == id}
+  end
+
+  def find_all_by_credit_card_number(num)
+    @all.find_all {|number| number.credit_card_number == num}
+  end
+
+  def find_all_by_result(data)
+    @all.find_all {|x| x.result == data}
+  end
+
 end

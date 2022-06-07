@@ -99,11 +99,6 @@ class SalesAnalyst < SalesEngine
     @merchants.all.find_all {|merchant| @invoices.find_all_by_merchant_id(merchant.id).length < invoice_count} #we are very unsure about this line- For this method we need to find two standard deviations below the mean _ and we are not sure this accomplishes that
   end
 
-  def date_formatter
-    date = Date.new(invoices.created_at)
-    date.strftime("%A")
-  end
-
   def invoices_per_weekday
     invoice_count = {'Monday' => 0,'Tuesday' => 0,'Wednesday' => 0,'Thursday' => 0,'Friday' => 0,'Saturday' => 0,'Sunday' => 0,}
    @invoices.all.each do |invoice|
@@ -148,6 +143,15 @@ class SalesAnalyst < SalesEngine
     all_pending_invoices.each {|invoice| merchant_invoices << invoice.merchant_id}
     merchant_invoices = merchant_invoices.uniq
     merchant_invoices.map {|merchant_id| @merchants.find_by_id(merchant_id)}
+  end
+  
+  def most_sold_item_for_merchant(m_id)
+    most_items = []
+    items_from_M = @items.find_all_by_merchant_id(m_id)
+    items_i = items_from_M.flat_map do |item|
+      @invoice_items.find_all_by_item_id(item.id)
+    end
+    most_items << items_i.max {|item| item.quantity}
   end
 
   def best_item_for_merchant(id)
