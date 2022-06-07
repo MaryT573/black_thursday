@@ -107,6 +107,7 @@ RSpec.describe SalesAnalyst do
     expect(sales_analyst.invoice_total(1)).to eq(21067.77)
     expect(sales_analyst.invoice_total(1).class).to eq BigDecimal
   end
+
   it "merchants that offers only one item" do
     binding.pry
     expect(sales_analyst.merchants_with_only_one_item.length).to eq(243)
@@ -116,5 +117,26 @@ RSpec.describe SalesAnalyst do
   it "merchants with only one item specifically by the month in created_at" do
     expect(sales_analyst.merchants_with_only_one_item_registered_in_month("April").length).to eq(24)
     expect(sales_analyst.merchants_with_only_one_item_registered_in_month("April").first.class).to eq(Merchant)
+  end
+
+  it 'can find the most_sold_item_for_merchant' do
+    expect(sales_analyst.most_sold_item_for_merchant(12335009)).to be_a(Array)
+    expect(sales_analyst.most_sold_item_for_merchant(12336163).length).to eq(1)
+  end
+    
+  it 'Finds the total revenue for a single merchant' do
+    expect(sales_analyst.revenue_by_merchant(12334194)).to eq(97979.37)
+    expect(sales_analyst.revenue_by_merchant(12334194)).to be_a(BigDecimal)
+  end
+
+  it "finds #merchants_with_pending_invoices returns merchants with pending invoices" do
+    expected = sales_analyst.merchants_with_pending_invoices
+    expect(expected.length).to eq 448
+    expect(expected.first.class).to eq Merchant
+  end
+
+  it 'returns a merchants best item by revenue' do
+    expect(sales_analyst.best_item_for_merchant(12334194).class).to eq(Item)
+    expect(sales_analyst.best_item_for_merchant(12334112).id).to eq(263539438)
   end
 end
