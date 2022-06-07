@@ -4,7 +4,6 @@ require "./lib/merchant_repository"
 require "./lib/invoice_repository"
 require "./lib/item_repository"
 
-
 RSpec.describe SalesAnalyst do
   let(:sales_engine) {SalesEngine.from_csv({
      :items     => "./data/items.csv",
@@ -108,12 +107,22 @@ RSpec.describe SalesAnalyst do
     expect(sales_analyst.invoice_total(1).class).to eq BigDecimal
   end
 
+  it "can total the revenue of a given date" do
+    date = Time.parse("2008-01-18")
+    expect(sales_analyst.total_revenue_by_date(date)).to eq(0.40905e3)
+  end
+
+  it "can check the top earners by number given" do
+    expect(sales_analyst.top_revenue_earners(3).length).to eq(3)
+    expect(sales_analyst.top_revenue_earners(3).first.name).to eq("MotankiDarena")
+    expect(sales_analyst.top_revenue_earners(3).last.name).to eq("perlesemoi")
+  end
+
   it "merchants that offers only one item" do
-    binding.pry
     expect(sales_analyst.merchants_with_only_one_item.length).to eq(243)
     expect(sales_analyst.merchants_with_only_one_item.first.class). to eq(Merchant)
-
   end
+ 
   it "merchants with only one item specifically by the month in created_at" do
     expect(sales_analyst.merchants_with_only_one_item_registered_in_month("April").length).to eq(24)
     expect(sales_analyst.merchants_with_only_one_item_registered_in_month("April").first.class).to eq(Merchant)

@@ -24,12 +24,10 @@ class SalesAnalyst < SalesEngine
     (@items.all.count / @merchants.all.count.to_f).round(2)
   end
 
-#helper method for average_item_price_for_merchant
   def count_merchants_items(id)
     @items.find_all_by_merchant_id(id).count
   end
-
-#helper method for average_item_price_for_merchant
+  
   def price_array(id)
     @items.find_all_by_merchant_id(id).map do |item|
      item.unit_price_to_dollars
@@ -130,6 +128,14 @@ class SalesAnalyst < SalesEngine
     invoice_paid_in_full?(id) ? total = @invoice_items.find_all_by_invoice_id(id).sum {|invoice_item| invoice_item.unit_price * invoice_item.quantity} : total = 0
     total
   end
+
+  def total_revenue_by_date(date)
+    @invoice_items.all.find_all {|day| day.created_at.strftime("%D") == date.strftime("%D")}.sum {|item| item.unit_price * item.quantity}
+  end
+
+  def top_revenue_earners(number = 20)
+    merchants_revenue = @merchants.all.find_all {|merchant| merchant.id}
+    merchants_revenue.max(number) {|id| revenue_by_merchant(id)}
 
   def merchants_with_only_one_item
     @merchants.all.find_all do |merchant|
