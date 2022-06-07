@@ -135,4 +135,15 @@ class SalesAnalyst < SalesEngine
     invoice_paid_in_full?(id) ? total = @invoice_items.find_all_by_invoice_id(id).sum {|invoice_item| invoice_item.unit_price * invoice_item.quantity} : total = 0
     total
   end
+
+  def merchants_with_only_one_item
+    @merchants.all.find_all do |merchant|
+      @items.find_all_by_merchant_id(merchant.id).count == 1
+    end
+  end
+
+  def merchants_with_only_one_item_registered_in_month(month)
+    merchants_from_month = merchants.all.find_all{|merchant| (merchant.created_at).strftime("%B") == month}
+    merchants_from_month.find_all{|merchant| @items.find_all_by_merchant_id(merchant.id).count == 1}
+  end
 end
