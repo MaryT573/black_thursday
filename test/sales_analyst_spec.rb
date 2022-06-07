@@ -4,7 +4,6 @@ require "./lib/merchant_repository"
 require "./lib/invoice_repository"
 require "./lib/item_repository"
 
-
 RSpec.describe SalesAnalyst do
   let(:sales_engine) {SalesEngine.from_csv({
      :items     => "./data/items.csv",
@@ -106,5 +105,16 @@ RSpec.describe SalesAnalyst do
   it 'Sums the total invoice cost' do
     expect(sales_analyst.invoice_total(1)).to eq(21067.77)
     expect(sales_analyst.invoice_total(1).class).to eq BigDecimal
+  end
+
+  it "can total the revenue of a given date" do
+    date = Time.parse("2008-01-18")
+    expect(sales_analyst.total_revenue_by_date(date)).to eq(0.40905e3)
+  end
+
+  it "can check the top earners by number given" do
+    expect(sales_analyst.top_revenue_earners(3).length).to eq(3)
+    expect(sales_analyst.top_revenue_earners(3).first.name).to eq("MotankiDarena")
+    expect(sales_analyst.top_revenue_earners(3).last.name).to eq("perlesemoi")
   end
 end

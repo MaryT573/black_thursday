@@ -80,5 +80,4 @@ describe InvoiceRepository do
     expect(invoice.find_by_id(300)).to eq(nil)
   end
 
-
 end
