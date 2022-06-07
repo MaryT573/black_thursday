@@ -24,12 +24,10 @@ class SalesAnalyst < SalesEngine
     (@items.all.count / @merchants.all.count.to_f).round(2)
   end
 
-#helper method for average_item_price_for_merchant
   def count_merchants_items(id)
     @items.find_all_by_merchant_id(id).count
   end
-
-#helper method for average_item_price_for_merchant
+  
   def price_array(id)
     @items.find_all_by_merchant_id(id).map do |item|
      item.unit_price_to_dollars
@@ -99,11 +97,6 @@ class SalesAnalyst < SalesEngine
     @merchants.all.find_all {|merchant| @invoices.find_all_by_merchant_id(merchant.id).length < invoice_count} #we are very unsure about this line- For this method we need to find two standard deviations below the mean _ and we are not sure this accomplishes that
   end
 
-  # def date_formatter
-  #   date = Date.new(invoices.created_at)
-  #   date.strftime("%A")
-  # end
-
   def invoices_per_weekday
     invoice_count = {'Monday' => 0,'Tuesday' => 0,'Wednesday' => 0,'Thursday' => 0,'Friday' => 0,'Saturday' => 0,'Sunday' => 0,}
    @invoices.all.each do |invoice|
@@ -143,11 +136,44 @@ class SalesAnalyst < SalesEngine
   def top_revenue_earners(number = 20)
     merchants_revenue = @merchants.all.find_all {|merchant| merchant.id}
     merchants_revenue.max(number) {|id| revenue_by_merchant(id)}
+
+  def merchants_with_only_one_item
+    @merchants.all.find_all do |merchant|
+      @items.find_all_by_merchant_id(merchant.id).count == 1
+    end
+  end
+
+  def merchants_with_only_one_item_registered_in_month(month)
+    merchants_from_month = merchants.all.find_all{|merchant| (merchant.created_at).strftime("%B") == month}
+    merchants_from_month.find_all{|merchant| @items.find_all_by_merchant_id(merchant.id).count == 1}
   end
 
   def revenue_by_merchant(merchant_id)
     invoice_ids = @invoices.find_all_by_merchant_id(merchant_id).map{|invoice| invoice.id}
     invoice_items_by_merchant = invoice_ids.map {|invoice_id| @invoice_items.find_all_by_invoice_id(invoice_id)}.flatten
     invoice_items_by_merchant.sum {|line_item| line_item.unit_price * line_item.quantity}
+  end
+
+  def merchants_with_pending_invoices
+    all_pending_invoices = @invoices.find_all_by_status(:pending)
+    merchant_invoices = []
+    all_pending_invoices.each {|invoice| merchant_invoices << invoice.merchant_id}
+    merchant_invoices = merchant_invoices.uniq
+    merchant_invoices.map {|merchant_id| @merchants.find_by_id(merchant_id)}
+  end
+  
+  def most_sold_item_for_merchant(m_id)
+    most_items = []
+    items_from_M = @items.find_all_by_merchant_id(m_id)
+    items_i = items_from_M.flat_map do |item|
+      @invoice_items.find_all_by_item_id(item.id)
+    end
+    most_items << items_i.max {|item| item.quantity}
+  end
+
+  def best_item_for_merchant(id)
+    invoice_ids = @invoices.find_all_by_merchant_id(id).map{|invoice| invoice.id}
+    invoice_items_by_merchant = invoice_ids.flat_map {|invoice_id| @invoice_items.find_all_by_invoice_id(invoice_id)}
+    items.find_by_id(invoice_items_by_merchant.max {|a,b| a.unit_price * a.quantity <=> b.unit_price * b.quantity}.item_id)
   end
 end
