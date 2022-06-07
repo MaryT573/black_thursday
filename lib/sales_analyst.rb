@@ -131,6 +131,17 @@ class SalesAnalyst < SalesEngine
     total
   end
 
+  def merchants_with_only_one_item
+    @merchants.all.find_all do |merchant|
+      @items.find_all_by_merchant_id(merchant.id).count == 1
+    end
+  end
+
+  def merchants_with_only_one_item_registered_in_month(month)
+    merchants_from_month = merchants.all.find_all{|merchant| (merchant.created_at).strftime("%B") == month}
+    merchants_from_month.find_all{|merchant| @items.find_all_by_merchant_id(merchant.id).count == 1}
+  end
+
   def revenue_by_merchant(merchant_id)
     invoice_ids = @invoices.find_all_by_merchant_id(merchant_id).map{|invoice| invoice.id}
     invoice_items_by_merchant = invoice_ids.map {|invoice_id| @invoice_items.find_all_by_invoice_id(invoice_id)}.flatten

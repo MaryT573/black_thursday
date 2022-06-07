@@ -108,6 +108,17 @@ RSpec.describe SalesAnalyst do
     expect(sales_analyst.invoice_total(1).class).to eq BigDecimal
   end
 
+  it "merchants that offers only one item" do
+    binding.pry
+    expect(sales_analyst.merchants_with_only_one_item.length).to eq(243)
+    expect(sales_analyst.merchants_with_only_one_item.first.class). to eq(Merchant)
+
+  end
+  it "merchants with only one item specifically by the month in created_at" do
+    expect(sales_analyst.merchants_with_only_one_item_registered_in_month("April").length).to eq(24)
+    expect(sales_analyst.merchants_with_only_one_item_registered_in_month("April").first.class).to eq(Merchant)
+  end
+
   it 'can find the most_sold_item_for_merchant' do
     expect(sales_analyst.most_sold_item_for_merchant(12335009)).to be_a(Array)
     expect(sales_analyst.most_sold_item_for_merchant(12336163).length).to eq(1)
